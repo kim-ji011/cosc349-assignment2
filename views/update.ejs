@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <%- include('partials/header') %>
+        <%- include('partials/sidebar', { status: status }) %>
+            <main>
+                <div class="birdpage">
+                    <div class="birdpage-main">
+
+                        <form action="/birds/<%= bird.bird_id %>/update" method="POST" enctype="multipart/form-data">
+                            <h2 id="form-title">Update Bird</h2>
+
+                            <label for="primary_name">Primary Name:</label>
+                            <input type="text" id="primary_name" name="primary_name" value="<%= bird.primary_name %>"><br>
+
+                            <label for="english_name">English Name:</label>
+                            <input type="text" id="english_name" name="english_name" value="<%= bird.english_name %>"><br>
+
+                            <label for="scientific_name">Scientific Name:</label>
+                            <input type="text" id="scientific_name" name="scientific_name"
+                                value="<%= bird.scientific_name %>"><br>
+
+                            <label for="order_name">Order Name:</label>
+                            <input type="text" id="order_name" name="order_name" value="<%= bird.order_name %>"><br>
+
+                            <label for="family">Family:</label>
+                            <input type="text" id="family" name="family" value="<%= bird.family %>"><br>
+
+                            <label for="weight">Weight (g):</label>
+                            <input type="text" id="weight" name="weight" value="<%= bird.weight %>"><br>
+
+                            <label for="length">Length (cm):</label>
+                            <input type="text" id="length" name="length" value="<%= bird.length %>"><br>
+
+                            <label for="status_name">Conservation Status:</label>
+                            <select id="status_name" name="status_name">
+                                <% status.forEach(function(stat) { %>
+                                    <option value="<%= stat.status_name %>" <%=bird.status_name===stat.status_name
+                                        ? 'selected' : '' %>><%= stat.status_name %>
+                                    </option>
+                                    <% }) %>
+                            </select><br>
+
+                            <label for="filename">Current Photo:</label><br>
+                            <img src="/images/<%= bird.filename %>" style="max-width: 200px; margin-bottom:20px; margin-top: -20px;"><br>
+
+                            <label for="photo">Upload New Photo:</label>
+                            <input type="file" id="photo" name="photo"><br>
+
+                            <label for="photographer">Photographer:</label>
+                            <input type="text" id="photographer" name="photographer" value="<%= bird.photographer %>"><br>
+
+                            <div id="button-container">
+                                <button type="submit" class="button" id="edit-bird-button">Update Bird</button>
+                                <a href="/birds/<%= bird.bird_id %>" class="button cancel-button" id="edit-bird-button">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+            <%- include('partials/footer') %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const form = document.querySelector('form');
+                    const weight = document.getElementById('weight');
+                    const length = document.getElementById('length');
+                    const photo = document.getElementById('photo');
+                    
+                    form.addEventListener('submit', function (event) {
+                        let isValid = true;
+                        let errorMessage = "";
+            
+                        document.querySelectorAll('.error-message').forEach(e => e.remove());
+            
+                        const requiredFields = ['primary_name', 'english_name', 'scientific_name', 'order_name', 'family', 'photographer'];
+                        requiredFields.forEach(fieldId => {
+                            const field = document.getElementById(fieldId);
+                            if (!field.value.trim()) {
+                                errorMessage = "This field is required";
+                                showError(field, errorMessage);
+                                isValid = false;
+                            }
+                        });
+            
+                        if (isNaN(weight.value) || weight.value.trim() === "" || Number(weight.value) <= 0) {
+                            errorMessage = "Please enter a valid number";
+                            showError(weight, errorMessage);
+                            isValid = false;
+                        }
+            
+                        if (isNaN(length.value) || length.value.trim() === "" || Number(length.value) <= 0) {
+                            errorMessage = "Please enter a valid number";
+                            showError(length, errorMessage);
+                            isValid = false;
+                        }
+            
+                        if (photo.files.length === 0 && !document.querySelector('img')) {
+                            errorMessage = "Please upload a bird photo";
+                            showError(photo, errorMessage);
+                            isValid = false;
+                        }
+            
+                        if (!isValid) {
+                            event.preventDefault();
+                        }
+                    });
+            
+                    function showError(element, message) {
+                        const errorElement = document.createElement('span');
+                        errorElement.classList.add('error-message');
+                        errorElement.textContent = message;
+                        element.parentNode.insertBefore(errorElement, element.nextSibling);
+                    }
+                });
+            </script>
+            
+            
+</body>
+
+</html>

@@ -1,0 +1,425 @@
+/* global variables */
+:root {
+    --theme-main-dark: #1769aa;
+    --theme-main: #2196f3;
+    --theme-main-light: #4dabf5;
+    --aside-width: 300px;
+    --card-width: 350px;
+}
+
+main {
+    box-shadow: inset 0px 0px 8px #0007;
+}
+
+main {
+    box-shadow: inset 0px 0px 8px #0007;
+}
+
+/* grid layout */
+body {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    grid-template-columns: var(--aside-width) 1fr;
+}
+header, footer {
+    grid-column: span 2;
+}
+
+
+/* Small screens (phones) */
+@media (max-width: 620px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-rows: min-content min-content 1fr min-content;
+    }
+    header, footer {
+        grid-column: span 1;
+    }
+    header h1 {
+        font-size: 30px !important;
+    }
+}
+
+/* flex layouts */
+header, footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    position: relative; /* Add this line */
+    background-color: var(--theme-main);
+    color: white;
+}
+
+#plus-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 70px;
+    font-size: 3em;
+    height: 100%;
+    width: 70px;
+    font-size: 3em;
+    text-decoration: none;
+    color: white;
+    background-color: var(--theme-main);
+    border-radius: 0;
+    box-shadow: 0px 0px 0px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: -20px;
+}
+
+#plus-button:hover {
+    background-color: var(--theme-main-light);
+}
+
+#plus-button:active {
+    background-color: var(--theme-main-dark);
+}
+
+aside {
+    display: flex;
+    flex-flow: column;
+    align-items: stretch;
+    background: white;
+    flex-basis: var(--aside-width);
+    padding: 16px;
+    background: white;
+    flex-basis: var(--aside-width);
+    padding: 16px;
+}
+
+
+#birds {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
+    gap: 16px;
+}
+.card:only-child {
+    grid-column: 1 / -1;
+}
+.card:only-child .card-image {
+    height: 50%;
+}
+
+.birdpage {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.birdpage-main {
+    padding: 50px;
+    background-color: #e4f3ff;
+    padding: 50rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-shadow: 2px 2px 8px #0007;
+    border-radius: 5px;
+}
+
+.birdbox {
+    max-width: 800px;
+}
+
+#eng-name {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+#birdpage-img-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 100%; */
+    margin: 0 auto; 
+}
+
+#birdpage-img{
+    max-width: 100%;
+    height: auto;
+}
+
+.photo-credit {
+    position: absolute;
+    bottom: -35px;
+    left: 0px;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.birdpage-info {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    width: 60%;
+    margin-top: 50px;
+}
+
+.birdpage-info li {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 10px;
+}
+
+
+
+.birdpage-info span {
+    width: calc(100% - 115px);
+}
+
+/* general styles */
+body {
+    background: #eee;
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+}
+
+header, footer {
+    background-color: var(--theme-main);
+    color: white;
+    position: relative;
+}
+header img {
+    height: 50px;
+    margin-right: 16px;
+}
+header h1 {
+    font-size: 50px;
+}
+
+/* form styles */
+label, select, input, .button {
+    display: block;
+    width: 100%;
+    border-radius: 4px;
+}
+select, input, .button {
+    margin-bottom: 8px;
+    height: 32px;
+}
+.button {
+    background: var(--theme-main);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: large;
+    box-shadow: 1px 1px 4px #0007;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.button:hover {
+    background: var(--theme-main-light);
+}
+.button:active {
+    background: var(--theme-main-dark);
+}
+
+#button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 100px;
+    margin-top: 50px;
+    margin-bottom: 0px;
+}
+
+/* bird cards */
+.card {
+    box-shadow: 2px 2px 8px #0007;
+    background: white;
+    border-radius: 5px;
+    /* max-width: var(--card-width); */
+    /* flex-grow: 1; */
+    /* max-width: 100%; */
+}
+.card-image {
+    position: relative;
+}
+.card-image img {
+    border-radius: 5px;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.card-image .card-title {
+    background: linear-gradient(0deg, #000a 20%, #0000 100%);
+    /* background: #0007; */
+    position: absolute;
+    width: calc(100% - 16px);
+    height: 50%;
+    bottom: 0px;
+    padding-left: 16px;
+    color: white;
+}
+.card-image .card-title p {
+    position: absolute;
+    font-size: x-large;
+    bottom:10px;
+}
+.card-image .card-title span {
+    position: absolute;
+    font-size: medium;
+    bottom: 8px;
+}
+.card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* card content style */
+.card-content {
+    padding: 20px;
+}
+h2 {
+    margin: 0;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+li {
+    display: flex;
+}
+li b {
+    width: 115px;
+}
+li span {
+    width: calc(100% - 115px);
+}
+
+/* conservation status circles */
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    right: 16px;
+    bottom: -25px;
+    display: block;
+    z-index: 100;
+    border: 4px solid white;
+}
+
+.circle-small {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 1px solid white;
+}
+
+#error-container {
+    padding: 30px;
+}
+
+
+#create-fieldset {
+    padding: 80px;
+}
+
+#form-title {
+    margin-top:40px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form label {
+    display: block;
+    text-align: left;
+}
+
+form {
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+
+/* Birdpage buttons */
+.birdpage-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 200px;
+}
+#edit-bird-button {
+    width: 200px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0px 0px 8px #0007;
+    border-radius: 5px;
+    position: relative
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.modal-content .button {
+    width: 100px;
+    margin: 0 30px;
+
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #888;
+}
+
+#update-fieldset {
+    padding: 50px;
+}

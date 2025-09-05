@@ -8,6 +8,8 @@
 Vagrant.configure("2") do |config|
 
   config.vm.box = "bento/ubuntu-22.04"
+  config.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant"
+
 
   # Frontend VM
   config.vm.define "webserver" do |webserver|

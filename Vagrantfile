@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-22.04"
   config.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant"
-  config.vm.synced_folder "./app/public/images", "/var/www/images", type: "virtualbox"
+  config.vm.synced_folder "./public/images", "/var/www/images", type: "virtualbox"
 
   # Webserver VM (Frontend)
   config.vm.define "webserver" do |webserver|
@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
     webserver.vm.network "private_network", ip: "192.168.56.10"
     webserver.vm.network "forwarded_port", guest: 80, host: 8080  # Forward port 80 to localhost:8080
     webserver.vm.provider "virtualbox" do |vb|
-      vb.memory = 512
+      vb.memory = 1024  #
       vb.cpus = 1
     end
     webserver.vm.provision "shell", path: "provision_webserver.sh"

@@ -19,5 +19,5 @@ CREATE USER 'birduser'@'%' IDENTIFIED BY 'birdpass';
 GRANT ALL PRIVILEGES ON birds_db.* TO 'birduser'@'%';
 FLUSH PRIVILEGES;
 EOF
-mysql -u root -prootpass birds_db < /vagrant/db_setup.sql
+mysql -u root -prootpass birds_db < /sql/db_setup.sql
 echo "Database provisioned with test data."

@@ -35,7 +35,7 @@ router.get('/birds', async (req, res) => {
     try {
         const [birdRows] = await db.query(birds_query);
         birds_data = birdRows;
-
+        console.log("Birds fetched from DB:", birds_data.length);
     } catch (err) {
         console.error("Error fetching birds from the database:", err);
     }
@@ -154,7 +154,7 @@ router.get('/birds/:id', async (req, res) => {
         }
 
         const bird = birdRows[0];
-        res.render('birdpage', { title: bird.primary_name, bird: bird, status: conservation_status_data, birds: birdRows});
+        res.render('birdpage', { title: bird.primary_name, bird: bird, status: conservation_status_data, birds: birdRows });
     } catch (err) {
         console.error("Error fetching bird from the database:", err);
         res.status(500).send("Internal Server Error");
@@ -242,7 +242,7 @@ router.post('/birds/:id/update', async (req, res) => {
     if (req.files && req.files.photo) {
         const photo = req.files.photo;
         newFilename = `${birdId}_${photo.name}`;
-        
+
         const uploadPath = path.join(__dirname, 'public', 'images', newFilename);
         try {
             await photo.mv(uploadPath);

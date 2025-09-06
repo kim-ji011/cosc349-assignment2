@@ -1,18 +1,23 @@
 -- create user
-CREATE USER 'cosc203' IDENTIFIED BY 'password';
-GRANT ALL ON *.* TO 'cosc203' WITH GRANT OPTION;
+CREATE USER 'cosc349' IDENTIFIED BY 'password';
 
--- create database
-DROP TABLE IF EXISTS ConservationStatus;
-DROP TABLE IF EXISTS Bird;
+GRANT ALL ON *.* TO 'cosc349' WITH GRANT OPTION;
+
+-- Drop and create database
+DROP DATABASE IF EXISTS birds_db;
+
+CREATE DATABASE birds_db;
+
+USE birds_db;
+
+-- Drop tables if they exist
 DROP TABLE IF EXISTS Photos;
 
-DROP DATABASE IF EXISTS ASGN2;
+DROP TABLE IF EXISTS Bird;
 
-CREATE DATABASE ASGN2;
-USE ASGN2;
+DROP TABLE IF EXISTS ConservationStatus;
 
--- create tables
+-- Create tables
 CREATE TABLE ConservationStatus (
     status_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     status_name VARCHAR(255) NOT NULL,
@@ -20,13 +25,13 @@ CREATE TABLE ConservationStatus (
 );
 
 CREATE TABLE Bird (
-    bird_id INT AUTO_INCREMENT PRIMARY KEY, 
-    primary_name VARCHAR(50) NOT NULL, 
-    english_name VARCHAR(50), 
-    scientific_name VARCHAR(50), 
-    order_name VARCHAR(50), 
-    family VARCHAR(50), 
-    weight NUMERIC(10, 0), 
+    bird_id INT AUTO_INCREMENT PRIMARY KEY,
+    primary_name VARCHAR(50) NOT NULL,
+    english_name VARCHAR(50),
+    scientific_name VARCHAR(50),
+    order_name VARCHAR(50),
+    family VARCHAR(50),
+    weight NUMERIC(10, 0),
     length NUMERIC(10, 0),
     status_id INT NOT NULL,
     FOREIGN KEY (status_id) REFERENCES ConservationStatus(status_id)
@@ -34,10 +39,18 @@ CREATE TABLE Bird (
 
 CREATE TABLE Photos (
     bird_id INT NOT NULL,
-    filename VARCHAR(255), 
+    filename VARCHAR(255),
     photographer VARCHAR(50),
     PRIMARY KEY (bird_id),
     FOREIGN KEY (bird_id) REFERENCES Bird(bird_id)
 );
 
-ALTER TABLE Bird AUTO_INCREMENT = 69;
+ALTER TABLE
+    Bird AUTO_INCREMENT = 69;
+
+-- Create user and grant privileges
+CREATE USER IF NOT EXISTS 'birduser' @'%' IDENTIFIED BY 'birdpass';
+
+GRANT ALL PRIVILEGES ON birds_db.* TO 'birduser' @'%';
+
+FLUSH PRIVILEGES;

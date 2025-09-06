@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "api" do |api|
     api.vm.hostname = "api"
     api.vm.network "private_network", ip: "192.168.56.11"
-    api.vm.network "forwarded_port", guest: 3000, host: 3000  # Forward port 3000 to localhost:3000 (for debugging)
+    api.vm.network "forwarded_port", guest: 3000, host: 3000
     api.vm.provider "virtualbox" do |vb|
       vb.memory = 1024
       vb.cpus = 1

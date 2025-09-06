@@ -19,8 +19,8 @@ server {
     }
 }
 EOF
-cp -r /vagrant/app/views /var/www/
-cp -r /vagrant/app/public /var/www/
+cp -r /vagrant/views /var/www/
+cp -r /vagrant/public /var/www/
 
 systemctl restart nginx
 systemctl enable nginx

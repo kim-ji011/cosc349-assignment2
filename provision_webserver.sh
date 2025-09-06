@@ -9,8 +9,10 @@ server {
     root /var/www;
     index index.html index.htm;
     location /images/ {
+        alias /vagrant/public/images/;
         autoindex on;
     }
+
     location / {
         proxy_pass http://192.168.56.11:3000;
         proxy_set_header Host $host;
@@ -19,8 +21,8 @@ server {
     }
 }
 EOF
-cp -r /vagrant/app/views /var/www/
-cp -r /vagrant/app/public /var/www/
+cp -r /vagrant/views /var/www/
+cp -r /vagrant/public /var/www/
 
 systemctl restart nginx
 systemctl enable nginx

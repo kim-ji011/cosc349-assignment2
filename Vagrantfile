@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-22.04"
   config.vm.synced_folder ".", "/vagrant", owner: "vagrant", group: "vagrant"
-  config.vm.synced_folder "./public/images", "/var/www/images", type: "virtualbox"
+  config.vm.synced_folder "./public/images", "/vagrant/public/images", type: "virtualbox"
 
   # Webserver VM (Frontend)
   config.vm.define "webserver" do |webserver|

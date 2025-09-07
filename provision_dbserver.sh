@@ -3,6 +3,10 @@ apt-get update -y
 apt-get install -y mysql-server
 systemctl start mysql
 systemctl enable mysql
+
+sed -i "s/^bind-address\s*=.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
+
 # Secure installation with password (non-interactive)
 mysql <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'rootpass';

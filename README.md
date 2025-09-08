@@ -87,3 +87,9 @@ Follow these steps to set up and run the application:
 - `/views/`: EJS templates (e.g., `index.ejs`, `partials/bird.ejs`).
 - `/public/images/`: Bird photos synced to VMs.
 - `/sql/`: Location for SQL files.
+
+## Known Issues
+
+- **Issue: dbserver Not Reprovisioned Automatically**  
+  - **Description**: After running `vagrant up`, the `dbserver` VM may not apply recent changes to `provision_dbserver.sh`, `db_setup.sql`, or `db_populate.sql` if previously provisioned. This can result in missing tables or data (e.g., `Bird` table not found).
+  - **Fix**: Run `vagrant provision dbserver` to force reprovisioning and apply updates. Verify with `vagrant ssh dbserver`, then `mysql -u birduser -pbirdpass birds_db` and `SHOW TABLES;`.

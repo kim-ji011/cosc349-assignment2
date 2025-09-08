@@ -23,12 +23,10 @@ No additional software is required on the host, as all dependencies (e.g., Node.
 Follow these steps to set up and run the application:
 
 1. **Clone the Repository**:
-   ```
-   git clone git@github.com:kim-ji011/cosc349-assignment1.git
+   ```bash
+   git clone https://github.com/kim-ji011/cosc349-assignment1.git
    cd cosc349-assignment1
-   ```
    
-
 2. **Start the VMs**:
    ```
    vagrant up

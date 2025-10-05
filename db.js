@@ -6,9 +6,9 @@ const mysql2 = require('mysql2');
  */
 const pool = mysql2.createPool({
     host: 'birds-db.c5wqegsmc0cs.us-east-1.rds.amazonaws.com',
-    user: 'admin',
+    user: 'birduser',
     password: 'birdpass',
-    database: 'birdsdb',
+    database: 'birds-db',
     port: 3306,
     charset: 'utf8mb4',
     waitForConnections: false,

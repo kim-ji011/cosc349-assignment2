@@ -5,11 +5,11 @@ CREATE USER 'cosc349' IDENTIFIED BY 'password';
 GRANT ALL ON *.* TO 'cosc349' WITH GRANT OPTION;
 
 -- Drop and create database
-DROP DATABASE IF EXISTS birds_db;
+DROP DATABASE IF EXISTS birdsdb;
 
-CREATE DATABASE birds-db;
+CREATE DATABASE birdsdb;
 
-USE birds_db;
+USE birdsdb;
 
 -- Drop tables if they exist
 DROP TABLE IF EXISTS Photos;
@@ -52,6 +52,6 @@ ALTER TABLE
 -- Create user and grant privileges
 CREATE USER IF NOT EXISTS 'birduser' @'%' IDENTIFIED BY 'birdpass';
 
-GRANT ALL PRIVILEGES ON birds_db.* TO 'birduser' @'%';
+GRANT ALL PRIVILEGES ON birdsdb.* TO 'birduser' @'%';
 
 FLUSH PRIVILEGES;

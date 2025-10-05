@@ -1,4 +1,5 @@
 -- create user
+DROP USER IF EXISTS 'cosc349';
 CREATE USER 'cosc349' IDENTIFIED BY 'password';
 
 GRANT ALL ON *.* TO 'cosc349' WITH GRANT OPTION;

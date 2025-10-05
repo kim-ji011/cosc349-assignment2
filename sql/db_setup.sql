@@ -7,7 +7,7 @@ GRANT ALL ON *.* TO 'cosc349' WITH GRANT OPTION;
 -- Drop and create database
 DROP DATABASE IF EXISTS birds_db;
 
-CREATE DATABASE birds_db;
+CREATE DATABASE birds-db;
 
 USE birds_db;
 

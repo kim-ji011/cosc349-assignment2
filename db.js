@@ -5,7 +5,7 @@ const mysql2 = require('mysql2');
  * allows multiple connections to be used efficiently
  */
 const pool = mysql2.createPool({
-    host: 'birdsdb.co44xujhq2ce.us-east-1.rds.amazonaws.com',
+    host: 'birds-db.c5wqegsmc0cs.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: 'birdpass',
     database: 'birdsdb',

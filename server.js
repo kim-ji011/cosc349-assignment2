@@ -9,7 +9,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 /* host public/ directory to serve: images, css, js, etc. */
-app.use(express.static('/vagrant/public'));
+// app.use(express.static('/vagrant/public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 /* path routing and endpoints */
 app.use('/', require('./path_router'));

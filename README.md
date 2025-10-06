@@ -33,6 +33,44 @@ Visit:
 http://<API-EC2-Public-IP>:3000/birds
 ```
 
+## Add AWS Credentials (Learner Lab)
+
+If using AWS Academy Learner Lab temporary credentials:
+
+1. In the Learner Lab dashboard click **Launch AWS Academy Learner Lab**.
+1. Click **AWS Details**.
+1. Click **Show AWS CLI** to reveal the Access Key, Secret Key, and Session Token.
+1. On the EC2 instance, create the credentials directory if it does not exist:
+
+```bash
+mkdir -p ~/.aws
+```
+
+1. Open the credentials file:
+
+```bash
+nano ~/.aws/credentials
+```
+
+1. Paste the values shown under "AWS CLI" (example structure below—do NOT copy these placeholders literally):
+
+```ini
+[default]
+aws_access_key_id=AKIAEXAMPLE123456
+aws_secret_access_key=exampleSecretKeyValueHere1234567890abcdEFGH
+aws_session_token=IQoJb3JpZ2luX2VjEOr//////////wEaCXVzLWVhc3QtMSJHMEUCIQC5...
+region=us-east-1
+```
+
+1. Save and exit (Ctrl+O, Enter, Ctrl+X).
+1. (Optional) Test:
+
+```bash
+node -e "const AWS=require('aws-sdk');const s=new AWS.S3();s.listBuckets((e,d)=>console.log(e||d.Buckets.map(b=>b.Name)));"
+```
+
+These temporary credentials expire; if uploads start failing later, repeat the steps to refresh.
+
 ## Adding Birds & Images
 
 - Use the “Create” form in the UI.

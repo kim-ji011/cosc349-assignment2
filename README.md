@@ -30,7 +30,7 @@ The server listens on `PORT` (default 3000) and logs: `API running on port 3000`
 Visit:
 
 ```text
-http://<API-EC2-Public-IP>:3000/birds
+http://<Frontend-EC2-Public-IP>/birds
 ```
 
 ## Add AWS Credentials (Learner Lab)

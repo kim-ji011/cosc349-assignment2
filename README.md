@@ -1,95 +1,84 @@
 # Birds of Aotearoa
 
-**Team Members:**
-- Jenny Kim, ID: 3268560
-- Newton Sythong, ID: 4021741
+## What the App Does
 
-This application displays information about New Zealand (Aotearoa) bird species, including their primary names, English names, scientific names, conservation status, weights, lengths, and photos. Users can add, update, and delete bird entries through a web interface. The app is deployed using three virtual machines (VMs) managed by Vagrant and VirtualBox: a webserver for the frontend, an API VM for backend logic, and a dbserver for MySQL database storage.
+Displays New Zealand bird records (name, taxonomy, conservation status, image) and lets users create, update, and delete entries. Images are uploaded to S3 (falling back to local storage if S3 upload fails).
 
-## Prerequisites
+## Requirements (Assumed Ready)
 
-Before running the application, ensure the following are installed on your host machine:
+- Node.js (v18+ recommended) on the API EC2
+- Network access from API EC2 to the RDS endpoint (port 3306 open)
+- S3 bucket with public read policy (or appropriate access method)
+- Security group allowing inbound HTTP (port 3000 or mapped port)
 
-- **VirtualBox**: Version 6.1 or later ([download](https://www.virtualbox.org/))
-- **Vagrant**: Version 2.2 or later ([download](https://www.vagrantup.com/))
-- **Git**: For cloning the repository ([download](https://git-scm.com/))
-- **Approximately 2GB of free disk space**: For VM images and synced files
+## Clone & Install
 
-No additional software is required on the host, as all dependencies (Node.js, MySQL, Nginx) are installed automatically within the VMs during provisioning.
+```bash
+git clone https://github.com/kim-ji011/cosc349-assignment2.git
+cd cosc349-assignment2
+npm install
+```
 
-## How to Run
+## Start the Application
 
-Follow these steps to set up and run the application:
+```bash
+npm start
+```
 
-1. **Clone the Repository**:
-   ```sh
-   git clone https://github.com/kim-ji011/cosc349-assignment1.git
-   cd cosc349-assignment1
-   ```
+The server listens on `PORT` (default 3000) and logs: `API running on port 3000`.
 
-2. **Start the VMs**:
-   ```sh
-   vagrant up
-   ```
-   - This command downloads the `bento/ubuntu-22.04` base box and provisions the three VMs (`webserver`, `api`, `dbserver`) with private IPs (`192.168.56.10`, `192.168.56.11`, `192.168.56.12`).
-   - Provisioning installs MySQL, Node.js, Nginx, and preloads test data automatically.
+Visit:
 
-3. **Access the VMs (Optional):**
-   - To SSH into a VM (e.g., dbserver), run:
-     ```sh
-     vagrant ssh dbserver
-     ```
-   - The default password for the `vagrant` user is `vagrant`.
+```text
+http://<API-EC2-Public-IP>:3000/birds
+```
 
-4. **Access the Database (Optional):**
-   - To connect to MySQL on the dbserver VM, SSH in first, then run:
-     ```sh
-     vagrant ssh dbserver
-     mysql -u birduser -pbirdpass birds_db
-     ```
+## Adding Birds & Images
 
-5. **Access the Application:**
-   - Open a web browser and navigate to [http://localhost:8080](http://localhost:8080).
-   - The homepage displays a list of preloaded birds with conservation status colors and photos. Click on a bird to view details or use the form to update or delete entries.
-   - Click on the "+" symbol on the top right of the page to add a new bird.
+- Use the “Create” form in the UI.
+- Images are saved locally to `public/images` and (if credentials & bucket are available) uploaded to S3 with a generated key; on success the DB stores the S3 URL.
 
-6. **Troubleshooting:**
-   - If the app doesn’t load (e.g., 502 Bad Gateway), check logs:
-     - SSH into the API VM:
-       ```sh
-       vagrant ssh api
-       pm2 logs bird-api
-       exit
-       ```
-   - Re-provision if needed:
-     ```sh
-     vagrant provision
-     ```
+## Basic Verification
 
-7. **Stop the VMs:**
-   ```sh
-   vagrant halt
-   ```
-   To destroy and reclaim space:
-   ```sh
-   vagrant destroy -f
-   ```
+```bash
+curl -I http://localhost:3000/birds
+```
 
-## Application Overview
+Expect HTTP 200.
 
-- **Webserver VM**: Hosts Nginx on port 80, serving the UI and proxying API requests to `192.168.56.11:3000`. Static images are synced from `/public/images` on the host to `/var/www/images`.
-- **API VM**: Runs Node.js with Express (`server.js`) on port 3000, handling CRUD operations and querying the database.
-- **dbserver VM**: Runs MySQL, storing data in `birds_db` with tables `ConservationStatus`, `Bird`, and `Photos`.
+## Common Issues
 
-## Repository Structure
+| Symptom | Check |
+|---------|-------|
+| Empty list | Database not populated (run SQL scripts in `sql/`) |
+| Upload error | S3 credentials/role or bucket name mismatch |
+| 403 on image | Bucket policy / public access settings |
+| Port in use | Another node process (kill it, then restart) |
 
-- `/`: Contains `Vagrantfile` (VM definitions), provisioning scripts (`provision_webserver.sh`, `provision_api.sh`, `provision_dbserver.sh`), app files (`server.js`, `path_router.js`, `db.js`), SQL files (`db_setup.sql`, `db_populate.sql`), and `README.md`.
-- `/views/`: EJS templates (e.g., `index.ejs`, `partials/bird.ejs`).
-- `/public/images/`: Bird photos synced to VMs.
-- `/sql/`: Location for SQL files.
+## SQL (Optional Re-init)
 
-## Known Issues
+Only if you need to initialize or reset data (requires valid MySQL client and credentials):
 
-- **Issue: dbserver Not Reprovisioned Automatically**  
-  - **Description**: After running `vagrant up`, the `dbserver` VM may not apply recent changes to `provision_dbserver.sh`, `db_setup.sql`, or `db_populate.sql` if previously provisioned. This can result in missing tables or data (e.g., `Bird` table not found).
-  - **Fix**: Run `vagrant provision dbserver` to force reprovisioning and apply updates. Verify with `vagrant ssh dbserver`, then `mysql -u birduser -pbirdpass birds_db` and `SHOW TABLES;`.
+```bash
+mysql -h <rds-endpoint> -u birduser -p birdsdb < sql/db_setup.sql
+mysql -h <rds-endpoint> -u birduser -p birdsdb < sql/db_populate.sql
+```
+
+## Project Structure (Selected)
+
+```text
+server.js          # Express entrypoint
+path_router.js     # Routes + upload + DB interactions
+db.js              # MySQL pool (hard-coded credentials)
+views/             # EJS templates
+public/            # Static assets (css, images)
+sql/               # Setup & populate scripts
+```
+
+## Credits
+
+COSC349 Assignment 2 (2025)
+
+- Jenny Kim (3268560)
+- Newton Sythong (4021741)
+

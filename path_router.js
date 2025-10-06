@@ -103,8 +103,31 @@ router.post('/birds/create', async (req, res) => {
             const [result] = await db.query(bird_query, [primary_name, english_name, scientific_name, order_name, family, weight, length, status_id]);
             const bird_id = result.insertId;
 
-            const photo_query = `INSERT INTO Photos (bird_id, filename, photographer) VALUES (?, ?, ?);`;
-            await db.query(photo_query, [bird_id, photo.name, photographer]);
+            // First create Photos row with temporary local filename (or placeholder)
+            const initialPhotoQuery = `INSERT INTO Photos (bird_id, filename, photographer) VALUES (?, ?, ?);`;
+            await db.query(initialPhotoQuery, [bird_id, photo.name, photographer]);
+
+            // Attempt S3 upload (non-blocking with await to ensure DB update if success)
+            try {
+                const AWS = require('aws-sdk');
+                AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
+                const s3 = new AWS.S3();
+                const key = `images/${Date.now()}-${photo.name}`;
+                const uploadParams = {
+                    Bucket: process.env.S3_BUCKET || 'birds-aotearoa-images',
+                    Key: key,
+                    Body: photo.data,
+                    ContentType: photo.mimetype,
+                    ACL: 'public-read'
+                };
+                const uploadResult = await s3.upload(uploadParams).promise();
+                console.log('Image uploaded to S3:', uploadResult.Location);
+                // Update Photos row with S3 URL
+                const updatePhoto = `UPDATE Photos SET filename = ? WHERE bird_id = ?;`;
+                await db.query(updatePhoto, [uploadResult.Location, bird_id]);
+            } catch (s3Err) {
+                console.error('S3 Upload Error (continuing with local file name):', s3Err.message);
+            }
 
             res.redirect('/birds');
         } catch (err) {

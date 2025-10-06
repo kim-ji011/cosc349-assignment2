@@ -2,6 +2,18 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 const pool = require('./db');
 const path = require('path');
+// --- S3 single initialization ---
+let s3 = null;
+let s3Enabled = false;
+const s3Bucket = process.env.S3_BUCKET || 'birds-aotearoa-images';
+try {
+    const AWS = require('aws-sdk');
+    AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
+    s3 = new AWS.S3();
+    s3Enabled = true; // We optimistically enable; credential failure handled per-upload
+} catch (e) {
+    console.warn('S3 not initialized:', e.message);
+}
 router = express.Router();
 
 router.use(express.urlencoded({ extended: true }));
@@ -107,26 +119,25 @@ router.post('/birds/create', async (req, res) => {
             const initialPhotoQuery = `INSERT INTO Photos (bird_id, filename, photographer) VALUES (?, ?, ?);`;
             await db.query(initialPhotoQuery, [bird_id, photo.name, photographer]);
 
-            // Attempt S3 upload (non-blocking with await to ensure DB update if success)
-            try {
-                const AWS = require('aws-sdk');
-                AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
-                const s3 = new AWS.S3();
-                const key = `images/${Date.now()}-${photo.name}`;
-                const uploadParams = {
-                    Bucket: process.env.S3_BUCKET || 'birds-aotearoa-images',
-                    Key: key,
-                    Body: photo.data,
-                    ContentType: photo.mimetype,
-                    ACL: 'public-read'
-                };
-                const uploadResult = await s3.upload(uploadParams).promise();
-                console.log('Image uploaded to S3:', uploadResult.Location);
-                // Update Photos row with S3 URL
-                const updatePhoto = `UPDATE Photos SET filename = ? WHERE bird_id = ?;`;
-                await db.query(updatePhoto, [uploadResult.Location, bird_id]);
-            } catch (s3Err) {
-                console.error('S3 Upload Error (continuing with local file name):', s3Err.message);
+            if (s3Enabled && s3Bucket) {
+                try {
+                    const key = `images/${Date.now()}-${photo.name}`;
+                    const uploadParams = {
+                        Bucket: s3Bucket,
+                        Key: key,
+                        Body: photo.data,
+                        ContentType: photo.mimetype,
+                        ACL: 'public-read'
+                    };
+                    const uploadResult = await s3.upload(uploadParams).promise();
+                    console.log('Image uploaded:', uploadResult.Location);
+                    const updatePhoto = `UPDATE Photos SET filename = ? WHERE bird_id = ?;`;
+                    await db.query(updatePhoto, [uploadResult.Location, bird_id]);
+                } catch (s3Err) {
+                    console.warn('S3 upload skipped or failed:', s3Err.message);
+                }
+            } else {
+                console.log('S3 disabled or bucket missing; using local image filename.');
             }
 
             res.redirect('/birds');

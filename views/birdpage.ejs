@@ -17,7 +17,8 @@
                 <h1><%= bird.primary_name %></h1>
                 <p id="eng-name">(<%= bird.english_name %>)</p>
             <div id="birdpage-img-container">
-                <img src="/public/images/<%= bird.filename %>" alt="<%= bird.primary_name %>" id="birdpage-img">
+                <% const detailImgSrc = (/^https?:\/\//i.test(bird.filename)) ? bird.filename : ('/public/images/' + bird.filename); %>
+                <img src="<%= detailImgSrc %>" alt="<%= bird.primary_name %>" id="birdpage-img">
                 <p class="photo-credit">© <%= bird.photographer %></p>
             </div>
         

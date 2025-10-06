@@ -11,21 +11,22 @@ Displays New Zealand bird records (name, taxonomy, conservation status, image) a
 - S3 bucket with public read policy (or appropriate access method)
 - Security group allowing inbound HTTP (port 3000 or mapped port)
 
-## Clone & Install
+## Start the Application
+
+1. Connect to the API EC2 VM (SSH or Session Manager).
+1. Navigate to the project directory:
 
 ```bash
-git clone https://github.com/kim-ji011/cosc349-assignment2.git
 cd cosc349-assignment2
-npm install
 ```
 
-## Start the Application
+1. Start the server:
 
 ```bash
 npm start
 ```
 
-The server listens on `PORT` (default 3000) and logs: `API running on port 3000`.
+You should see: `API running on port 3000` (or another port if `PORT` is set). The app serves pages directly—no separate frontend build step required.
 
 Visit:
 

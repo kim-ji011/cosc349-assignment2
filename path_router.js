@@ -120,21 +120,21 @@ router.post('/birds/create', async (req, res) => {
             await db.query(initialPhotoQuery, [bird_id, photo.name, photographer]);
 
             if (s3Enabled && s3Bucket) {
+                const key = `images/${Date.now()}-${photo.name}`;
+                const uploadParams = {
+                    Bucket: s3Bucket,
+                    Key: key,
+                    Body: photo.data,
+                    ContentType: photo.mimetype
+                };
                 try {
-                    const key = `images/${Date.now()}-${photo.name}`;
-                    const uploadParams = {
-                        Bucket: s3Bucket,
-                        Key: key,
-                        Body: photo.data,
-                        ContentType: photo.mimetype,
-                        ACL: 'public-read'
-                    };
                     const uploadResult = await s3.upload(uploadParams).promise();
-                    console.log('Image uploaded:', uploadResult.Location);
+                    const finalUrl = uploadResult.Location || `https://${s3Bucket}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`;
+                    console.log('Image uploaded:', finalUrl);
                     const updatePhoto = `UPDATE Photos SET filename = ? WHERE bird_id = ?;`;
-                    await db.query(updatePhoto, [uploadResult.Location, bird_id]);
+                    await db.query(updatePhoto, [finalUrl, bird_id]);
                 } catch (s3Err) {
-                    console.warn('S3 upload skipped or failed:', s3Err.message);
+                    console.warn('S3 upload failed; retaining local filename:', s3Err.message);
                 }
             } else {
                 console.log('S3 disabled or bucket missing; using local image filename.');

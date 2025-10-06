@@ -3,7 +3,7 @@ const path = require('path');
 
 /* create the server */
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -17,6 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./path_router'));
 
 // /* start the server */
-app.listen(3000, '0.0.0.0', () => {
-  console.log('API running on port 3000');
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`API running on port ${PORT}`);
 });

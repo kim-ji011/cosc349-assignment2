@@ -34,6 +34,13 @@ Visit:
 http://<Frontend-EC2-Public-IP>/birds
 ```
 
+(Optional) If nginx is not running on frontend VM
+sudo systemctl start nginx
+sudo systemctl enable nginx
+sudo systemctl status nginx
+•  You should now see the status as
+  Active: active (running)
+
 ## Add AWS Credentials (Learner Lab)
 
 If using AWS Academy Learner Lab temporary credentials:
